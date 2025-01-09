@@ -10,8 +10,8 @@ CORS(app)
 
 
 @app.route("/")
-def upload():
-    return ""
+def home():
+    return "Hello"
 
 
 @app.route("/submit", methods=["POST"])
