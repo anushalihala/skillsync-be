@@ -25,8 +25,11 @@ def submit():
             resp = rag.rag_task(request.form.get("taskType"))
             os.remove(file_path)
             return make_response(resp, 200)
-        except:
-            return make_response("Invalid task type", 400)
+        except Exception as e:
+            if str(e) == "Invalid task type":
+                return make_response("Invalid task type", 400)
+            else:
+                return make_response(str(e), 400)
 
 
 if __name__ == "__main__":
