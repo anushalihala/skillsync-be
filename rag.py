@@ -7,7 +7,7 @@ from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.core import SummaryIndex, VectorStoreIndex, Document
 from llama_index.core.tools import QueryEngineTool
 from llama_index.core.agent import FunctionCallingAgentWorker
-from llama_index.core.agent import AgentRunner
+from llama_index.core.agent import ParallelAgentRunner
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
@@ -96,7 +96,7 @@ class RAGAgent:
             llm=self.llm,
             verbose=True,
         )
-        agent = AgentRunner(agent_worker, verbose=True)
+        agent = ParallelAgentRunner(agent_worker)
         response = agent.query(prompt)
         return str(response)
 
@@ -130,7 +130,7 @@ class RAGAgent:
             llm=self.llm,
             verbose=True,
         )
-        agent = AgentRunner(agent_worker, verbose=True)
+        agent = ParallelAgentRunner(agent_worker)
         response = agent.query(
             f"""{beginning_prompt}
 
