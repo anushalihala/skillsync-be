@@ -26,6 +26,7 @@ def submit():
             os.remove(file_path)
             return make_response(resp, 200)
         except Exception as e:
+            os.remove(file_path)
             if str(e) == "Invalid task type":
                 return make_response("Invalid task type", 400)
             else:
