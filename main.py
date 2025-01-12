@@ -29,7 +29,7 @@ def submit():
             if str(e) == "Invalid task type":
                 return make_response("Invalid task type", 400)
             else:
-                return make_response(str(e), 400)
+                return make_response(str(e), 500)
 
 
 if __name__ == "__main__":
