@@ -266,15 +266,18 @@ class RAGAgent:
 
     def rag_task(self, task_type: str):
         prompt = ""
+        if "react" in task_type:
+            cv_tools = "(user's CV summary provided in cv_summary_ms_tool and specific questions about user's CV answered using cv_vector_ms_tool)"
+            job_tools = "(job description provided in context)"
+        else:
+            cv_tools = "(user's CV summary provided in cv_summary_tool and specific questions about user's CV answered using cv_vector_tool)"
+            job_tools = "(job summary provided in job_summary_tool and specific questions about job answered using job_vector_tool)"
         if "cv" in task_type:
-            prompt = "Tailor the user's CV to be the best possible fit for the job description. Do not invent information not in the user's CV."
+            prompt = f"Tailor the user's CV {cv_tools} to be the best possible fit for the job description {job_tools}. Do not invent information not in the user's CV."
         elif "cover_letter" in task_type:
-            prompt = "Craft a cover letter using the user's resume to demonstrate that the user is an ideal fit for the job. Do not invent information not in the user's CV."
+            prompt = f"Craft a cover letter using the user's CV {cv_tools} to demonstrate that the user is an ideal fit for the job {job_tools}. Do not invent information not in the user's CV."
         else:
             raise Exception("Invalid task type")
-
-        if "react" in task_type:
-            prompt + "\nJob description is provided in context."
 
         if task_type.startswith("guided"):
             return self._guided_rag(prompt, "react" in task_type)
