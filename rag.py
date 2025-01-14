@@ -169,10 +169,11 @@ class RAGAgent:
             if hasattr(step, "thought")
         ]
         prev_two_thoughts = "\n".join(thoughts[-2:])
+        content_type = "cover letter" if "cover letter" in prompt else "tailored CV"
         response = self.llm.complete(
             f"""
-        Extract the tailored CV from the text below.
-        Provide only the tailored CV and no other text:
+        Extract the {content_type} from the text below.
+        Provide only the {content_type} and no other text:
                                     
         {prev_two_thoughts}
         {response}
