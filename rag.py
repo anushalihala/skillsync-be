@@ -189,8 +189,6 @@ class RAGAgent:
                 verbose=True,
                 context=f"{self.job_desc}",
             )
-            prompt = """Tailor the user's CV to be the best possible fit for the job description (provided as context). Do not invent information not in the user's CV.
-                """
             return self._get_response_from_react(agent, prompt)
         else:
             agent_worker = FunctionCallingAgentWorker.from_tools(
