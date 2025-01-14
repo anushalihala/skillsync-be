@@ -273,7 +273,7 @@ class RAGAgent:
             cv_tools = "(user's CV summary provided in cv_summary_tool and specific questions about user's CV answered using cv_vector_tool)"
             job_tools = "(job summary provided in job_summary_tool and specific questions about job answered using job_vector_tool)"
         if "cv" in task_type:
-            prompt = f"Tailor the user's CV {cv_tools} to be the best possible fit for the job description {job_tools}. Do not invent information not in the user's CV."
+            prompt = f"Craft a new tailored CV using the user's CV {cv_tools} so that it is the best possible fit for the job description {job_tools}. Do not invent information not in the user's CV."
         elif "cover_letter" in task_type:
             prompt = f"Craft a cover letter using the user's CV {cv_tools} to demonstrate that the user is an ideal fit for the job {job_tools}. Do not invent information not in the user's CV."
         else:
