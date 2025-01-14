@@ -217,9 +217,10 @@ class RAGAgent:
             "What are the degrees required for this position?"
         )
 
-        cv_vector_query_engine = self.cv_vector_tool.query_engine
-        hard_skills_evid = cv_vector_query_engine.query(str(hard_skills))
-        soft_skills_evid = cv_vector_query_engine.query(str(soft_skills))
+        cv_vector_query_engine = self.cv_vector_ms_tool.query_engine
+        hard_skills_projects = cv_vector_query_engine.query(f"What work experience and projects in the CV provide evidence of the following skills?: {str(hard_skills)}")
+        hard_skills_evid = cv_vector_query_engine.query(f"Please elaborate on the following projects/work experience: {str(hard_skills_projects)}")
+        soft_skills_evid = cv_vector_query_engine.query(f"What concrete evidence does the CV provide of the following skills?: {str(soft_skills)}")
         quals_evid = cv_vector_query_engine.query(str(quals))
 
         cvsum = self.cv_summary_tool.query_engine.query("cv summary")
@@ -227,19 +228,19 @@ class RAGAgent:
 
         prompt = f"""{beginning_prompt}
 
-            CV summary:
-            {str(cvsum)}
-
-            Job description summary:
-            {str(jobsum)}
-
-            Emphasize the following:
+            Focus on the following:
             {str(hard_skills_evid)}
 
             {str(soft_skills_evid)}
 
-            {str(quals_evid)}"""
+            {str(quals_evid)}
 
+            CV summary:
+            {str(cvsum)}
+
+            Job description summary:
+            {str(jobsum)}"""
+        print(prompt)
         if use_react:
             agent = ReActAgent.from_tools(
                 [self.cv_vector_ms_tool, self.cv_summary_ms_tool],
@@ -249,18 +250,19 @@ class RAGAgent:
             )
             return self._get_response_from_react(agent, prompt)
         else:
-            agent_worker = FunctionCallingAgentWorker.from_tools(
-                [
-                    self.cv_vector_tool,
-                    self.job_vector_tool,
-                    self.cv_summary_tool,
-                    self.job_summary_tool,
-                ],
-                llm=self.llm,
-                verbose=True,
-            )
-            agent = ParallelAgentRunner(agent_worker)
-            response = agent.chat(prompt)
+            # agent_worker = FunctionCallingAgentWorker.from_tools(
+            #     [
+            #         self.cv_vector_tool,
+            #         self.job_vector_tool,
+            #         self.cv_summary_tool,
+            #         self.job_summary_tool,
+            #     ],
+            #     llm=self.llm,
+            #     verbose=True,
+            # )
+            # agent = ParallelAgentRunner(agent_worker)
+            # response = agent.chat(prompt)
+            response = self.llm.complete(prompt)
             return str(response)
 
     def rag_task(self, task_type: str):
